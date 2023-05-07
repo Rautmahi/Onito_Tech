@@ -9,12 +9,137 @@ import {
   Select,
   Text,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useReducer } from "react";
+import axios from "axios"
 
 
+const initialState = {
+    name: "",
+    dob: "",
+    sex: "",
+    mobile: "",
+    address: "",
+    adharcard: "",
+    state: "",
+    city: "",
+    country: "",
+    pincode: "",
+    occupation: "",
+    religion: "",
+    marital: "",
+    nationality: "",
+  };
+
+  const reducer = (state, action) => {
+    switch (action.type) {
+      case "name":
+        return {
+          ...state,
+          company: action.payload,
+        };
+
+      case "dob":
+        return {
+          ...state,
+          city: action.payload,
+        };
+
+      case "sex":
+        return {
+          ...state,
+          location: action.payload,
+        };
+
+      case "mobile":
+        return {
+          ...state,
+          role: action.payload,
+        };
+
+      case "address":
+        return {
+          ...state,
+          level: action.payload,
+        };
+
+      case "adharcard":
+        return {
+          ...state,
+          contract: action.payload,
+        };
+
+      case "state":
+        return {
+          ...state,
+          country: action.payload,
+        };
+
+      case "city":
+        return {
+          ...state,
+          position: action.payload,
+        };
+
+      case "country":
+        return {
+          ...state,
+          language: action.payload,
+        };
+
+      case "pincode":
+        return {
+          ...state,
+          language: action.payload,
+        };
+      case "occupation":
+        return {
+          ...state,
+          language: action.payload,
+        };
+      case "religion":
+        return {
+          ...state,
+          language: action.payload,
+        };
+      case "marital":
+        return {
+          ...state,
+          language: action.payload,
+        };
+        case "nationality":
+            return {
+              ...state,
+              language: action.payload,
+            };
+      case "reset":
+        return initialState;
+
+      default:
+        return state;
+    }
+  };
 const Form = () => {
+ 
+  const initialRef = React.useRef(null)
 
+  
+  const [formData, dispatch] = useReducer(reducer, initialState)
+ 
+//    const [submitedData, setSubmitedData] = useState(formData);
+ 
 
+ 
+  const submitHandler=(e)=>{
+     e.preventDefault()
+   //   console.log(formData)
+     axios.post("https://jobapp-67qg.onrender.com/users",formData)
+     dispatch(initialState)
+ 
+     alert("successfully registered")
+     // setSubmitedData({...formData})
+     dispatch({type:"reset"})
+ 
+  }
   return (
     <>
       <Heading>Welcome to Onito Technology</Heading>
@@ -34,19 +159,22 @@ const Form = () => {
         <HStack>
           <FormControl isRequired>
             <FormLabel>Name</FormLabel>
-            <Input   type="text" placeholder="Enter Name" />
+            <Input ref={initialRef} 
+             value={formData.name} onChange={(e)=>dispatch({type:"name",payload:e.target.value})}
+            type="text" placeholder="Enter Name" />
           </FormControl>
 
           <FormControl isRequired>
             <FormLabel>Date of Birth</FormLabel>
-            <Input type="date" placeholder="Enter DOB" />
+            <Input  value={formData.dob }onChange={(e)=>dispatch({type:"dob",payload:e.target.value})} 
+            type="date" placeholder="Enter DOB" />
           </FormControl>
 
           <FormControl isRequired>
             <FormLabel>Sex</FormLabel>
-            <Select  onChange={(e) => setData(e.target.value)} placeholder="Select sex">
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
+            <Select placeholder="Select sex">
+              <option  value="Male" onChange={(e)=>dispatch({type:"sex",payload:e.target.value})} >Male</option>
+              <option value="Female" onChange={(e)=>dispatch({type:"sex",payload:e.target.value})} >Female</option>
             </Select>
           </FormControl>
         </HStack>
@@ -54,7 +182,7 @@ const Form = () => {
         <HStack>
           <FormControl>
             <FormLabel>Mobile No</FormLabel>
-            <Input  type="Number" placeholder="Enter Mobile Number" />
+            <Input type="Number" placeholder="Enter Mobile Number" />
           </FormControl>
 
           <FormControl>
@@ -201,7 +329,7 @@ const Form = () => {
         <br />
         <HStack justifyContent="end" gap="50px">
           <Button colorScheme="red"> Cancel</Button>
-          <Button   colorScheme="green"> Submit</Button>
+          <Button colorScheme="green" onClick={submitHandler}> Submit</Button>
         </HStack>
         <br />
         <br />
